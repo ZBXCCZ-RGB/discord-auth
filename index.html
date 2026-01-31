@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Авторизация для GTA Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #7289DA;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 10px 0;
+        }
+        .btn:hover {
+            background: #5b6eae;
+            transform: translateY(-2px);
+        }
+        .hidden {
+            display: none;
+        }
+        .info-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Авторизация для GTA Server</h1>
+        
+        <div id="step1">
+            <p>Для игры на нашем сервере требуется авторизация через Discord.</p>
+            <button class="btn" id="loginBtn">🔐 Войти через Discord</button>
+        </div>
+        
+        <div id="step2" class="hidden">
+            <div class="info-box">
+                <p id="status">Подключение к Discord...</p>
+                <div id="userInfo"></div>
+            </div>
+            <button class="btn" id="continueBtn">🚀 Запустить игру</button>
+        </div>
+    </div>
+
+    <script>
+        // КОНФИГУРАЦИЯ - ЭТО ВЫ ЗАПОЛНИТЕ ПОТОМ
+        const CONFIG = {
+            clientId: '1462119814339362816', // Ваш CLIENT_ID
+            redirectUri: window.location.origin + window.location.pathname,
+            // Остальные секреты мы добавим через другой файл
+        };
+
+        // Проверяем URL на наличие кода
+        const urlParams = new URLSearchParams(window.location.search);
+        const authCode = urlParams.get('code');
+
+        if (authCode) {
+            // Если есть код - обрабатываем авторизацию
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            
+            // В реальной версии здесь будет обмен кода на токен
+            document.getElementById('status').textContent = '✅ Авторизация успешна!';
+            document.getElementById('userInfo').innerHTML = `
+                <p>Теперь вы можете запустить игру</p>
+                <p><small>В реальной версии здесь будут ваши данные Discord</small></p>
+            `;
+            
+            document.getElementById('continueBtn').onclick = () => {
+                alert('В реальной версии здесь будет запуск лаунчера с токеном');
+                // window.location.href = 'my-launcher://auth?token=TEST_TOKEN';
+            };
+            
+        } else {
+            // Показываем кнопку входа
+            document.getElementById('loginBtn').onclick = () => {
+                const authUrl = `https://discord.com/oauth2/authorize?client_id=${CONFIG.clientId}&redirect_uri=${encodeURIComponent(CONFIG.redirectUri)}&response_type=code&scope=identify`;
+                window.location.href = authUrl;
+            };
+        }
+        
+        // Для отладки
+        console.log('Текущий URL:', window.location.href);
+        console.log('Redirect URI:', CONFIG.redirectUri);
+    </script>
+</body>
+</html>
